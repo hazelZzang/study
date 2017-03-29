@@ -1,9 +1,4 @@
-#ifndef __QUEUE__
-#define __QUEUE__
-
-
-#include <iostream>
-using namespace std;
+#pragma once
 
 class Queue {
 private:
@@ -20,5 +15,3 @@ public:
 	bool isEmpty();
 	void print();
 };
-
-#endif

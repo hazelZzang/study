@@ -1,5 +1,6 @@
-
-#include "stackFile.h"
+#include "stack.h"
+#include <iostream>
+using namespace std;
 
 Stack::Stack(int l) {
 	topIndex = -1;
@@ -13,7 +14,9 @@ Stack::Stack(int l) {
 Stack::~Stack() {
 	delete[] stackPtr;
 }
-
+int Stack::getSize() {
+	return topIndex;
+}
 char Stack::pop() {
 	if (isEmpty()) {
 		cout << "stack is empty" << endl;
@@ -30,11 +33,10 @@ void Stack::push(const char& data) {
 	stackPtr[++topIndex] = data;
 }
 
-void Stack::pushAll(const char* data) {
+void Stack::pushAll(const string& data) {
 
-	for (int i = strlen(data) - 1; i >= 0; i--) {
-		if (data != nullptr)
-			push(data[i]);
+	for (int i = data.length() - 1; i >= 0; i--) {
+		push(data[i]);
 	}
 }
 
@@ -59,4 +61,3 @@ void Stack::print() {
 	}
 	cout << endl;
 }
-

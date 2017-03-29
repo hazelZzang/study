@@ -1,8 +1,10 @@
-#include "queueFile.h"
+#include<iostream>
+#include"queue.h"
+using namespace std;
 
 Queue::Queue(int s)
-:size(s){
-	front = 0,rear = 0;
+	:size(s) {
+	front = 0, rear = 0;
 	queuePtr = new char[size];
 }
 Queue::~Queue() {
@@ -22,7 +24,8 @@ void Queue::enQueue(int v) {
 char Queue::deQueue() {
 	if (isEmpty()) {
 		cout << "Queue is Empty!" << endl;
-		return 0;	}
+		return 0;
+	}
 	char i = queuePtr[front++];
 	front %= size;
 	flag = 0;
@@ -37,7 +40,7 @@ bool Queue::isEmpty() {
 }
 
 void Queue::print() {
-	if (isEmpty()){
+	if (isEmpty()) {
 		cout << "Empty!" << endl;
 	}
 	else if (front < rear) {
