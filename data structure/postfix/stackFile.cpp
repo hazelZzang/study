@@ -1,5 +1,3 @@
-#define __STACK_FILE_CPP__
-#ifdef __STACK_FILE_CPP__
 
 #include "stackFile.h"
 
@@ -62,5 +60,3 @@ void Stack::print() {
 	cout << endl;
 }
 
-
-#endif

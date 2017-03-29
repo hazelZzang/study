@@ -1,5 +1,5 @@
+#ifndef __STACK__
 #define __STACK__
-#ifdef __STACK__
 
 #include <iostream>
 using namespace std;

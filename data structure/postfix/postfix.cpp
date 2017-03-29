@@ -1,5 +1,3 @@
-#define __POSTFIX_CPP__
-#ifdef __POSTFIX_CPP__
 
 #include "stackFile.cpp"
 
@@ -62,15 +60,3 @@ void postfix(Stack& s) {
 		cout << temp.pop();
 	}
 }
-
-
-int main(){
-	Stack s(20);
-	char * test = new char[20];
-	cin >> test;
-	s.pushAll(test);
-	postfix(s);
-	delete[] test;
-}
- 
-#endif
