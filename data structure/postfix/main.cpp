@@ -66,30 +66,34 @@ string postfix(Stack& s) {
 }
 
 char eval(Stack& s) {
-	char op1, op2;
+	int op1, op2;
 	int n;
 	int top = -1;
-	char token;
+	char token, result;
 	Stack temp;
 	while (token = s.pop()) {
 		if (isdigit(token)) {
 			temp.push(token);
 		}
 		else {
-			op2 = temp.pop();
-			op1 = temp.pop();
+			op2 = temp.pop() - '0';
+			op1 = temp.pop() - '0';
 			switch (token) {
 			case '+':
-				temp.push(op1 + op2);
+				result = (op1 + op2) + '0';
+				temp.push(result);
 				break;
 			case '-':
-				temp.push(op1 - op2);
+				result = (op1 - op2) + '0';
+				temp.push(result);
 				break;
 			case '*':
-				temp.push(op1 * op2);
+				result = (op1 * op2) + '0';
+				temp.push(result);
 				break;
 			case '/':
-				temp.push(op1 / op2);
+				result = (op1 / op2) + '0';
+				temp.push(result);
 				break;
 			}
 		}
@@ -98,19 +102,22 @@ char eval(Stack& s) {
 }
 
 int main() {
-	string test = "3+4-(9+1)";
-	string pf;
+	string test,pf;
+	cout << "Enter Data:";
+	cin >> test;
 	Stack i(20), p(20);
 	i.pushAll(test);
 
+	cout << "Echo Data:" << test << endl;
+
 	//infix to postfix
 	pf = postfix(i);
-	cout << pf << endl;
+	cout << "Conversion:" << pf << endl;
 
 	p.pushAll(pf);
 	
 	//value
-	cout << int(eval(p))<<endl;
+	cout << "Result:" << int(eval(p) - '0')<<endl;
 	
 	return 0;
 }

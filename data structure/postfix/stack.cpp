@@ -19,7 +19,6 @@ int Stack::getSize() {
 }
 char Stack::pop() {
 	if (isEmpty()) {
-		cout << "stack is empty" << endl;
 		return 0;
 	}
 	return stackPtr[topIndex--];
@@ -27,7 +26,6 @@ char Stack::pop() {
 
 void Stack::push(const char& data) {
 	if (isFull()) {
-		cout << "stack is full" << endl;
 		return;
 	}
 	stackPtr[++topIndex] = data;
