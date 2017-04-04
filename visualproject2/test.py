@@ -32,15 +32,15 @@ def dataPlot(dat,n):
         for j in range(10):
             plt.scatter(dat[i][0][j],dat[i][1][j], color = colorMat[i])
 
-def deciPlot(dat, W):
+def deciPlot(dat, W, c):
     rangeX = arange(-10,10,0.025)
     rangeY = arange(-10,10,0.025)
     X, Y = meshgrid(rangeX, rangeY)
     eq = W[0] + X*W[1] + Y*W[2]
-    plt.contour(X,Y,eq,[0], colors = 'red')
+    plt.contour(X,Y,eq,[0], colors = c)
 
 #data_1= [[1,-1],[X1(a), -X1(b)],[X2(a), -X2(b)]]
-def data_1(dat, a, b):
+def data(dat, a, b):
     datCol = len(dat[a][0])
     datRow = (len(dat[a]) + 1)
     data_1 = np.ones((datRow, (datCol * 2)))
@@ -63,52 +63,59 @@ def relaxation(W, D, learningLate, b,theta):
     while(1):
         dot_WD = np.dot(W, D)
         a = b - dot_WD > 0
+
         if theta == 0: break;
         S = ((b - dot_WD) / ( np.sum(D * D, axis=0) - 1) ) #열끼리 합
         J = (learningLate * np.sum(S[a] * D[:,a], axis = 1))
         W = W + J
-        print(a.sum())
         theta -= 1
     return W
 
 
 def LMS(W, D, learningLate, b, theta):
+    count = 0
     while(1):
         dot_WD = np.dot(W, D)
         J = learningLate * (b - dot_WD) * D
         a = np.sum(J,axis = 0) >= theta
-        if a.sum() == 0: break;
-        W = W + np.sum(J, axis = 1)
-        D = D[:,a]
+
+        if (a.sum() == 0 or count > 3000): break;
+        count += 1
+        D_err = D[:,a]
+        dot_WD_err = np.dot(W, D_err)
+        J_err = learningLate * (b - dot_WD_err) * D_err
+        W = W + np.sum(J_err, axis = 1)
     return W
 
 
 dat = []
 dat = read_data(dat)
-#"""
+"""
 #####1번
 W1 = weight_vector(0.1,0.1,0.1)
 D1 = data_1(dat,0,1)
 L1 = 0.01
 W = perceptron(W1,D1,L1)
-#"""
+"""
 """
 #####2번
 W2 = weight_vector(0,0,0)
-D2 = data_1(dat,0,2)
+D2 = data(dat,0,2)
 L2 = 0.01
+magin = 0.1
 thresholdNum = 1000
-W = relaxation(W2,D2,L2,0.5,thresholdNum)
+W = relaxation(W2,D2,L2,magin,thresholdNum)
 """
-"""
+#"""
 ######3번
-W3 = weight_vector(0,0,0)
-D3 = data_1(dat,0,2)
-L3 = 0.015
+W3 = weight_vector(-1.0,-0.3,0.3)
+D3 = data(dat,0,2)
+L3 = 0.01
 margin = 0.1
-threshold = 0.004
+threshold = 0.1
 W = LMS(W3,D3,L3,margin,threshold)
-"""
-dataPlot(dat,3)
-deciPlot(dat,W)
+#"""
+dataPlot(dat,2)
+colors = 'red'
+deciPlot(dat,W,colors)
 plt.show()
