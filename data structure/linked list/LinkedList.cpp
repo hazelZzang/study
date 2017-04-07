@@ -6,6 +6,7 @@ Kim Hye Ji
 */
 
 #include <iostream> 
+#include <string>
 using namespace std;
 
 class Node{
@@ -66,8 +67,12 @@ void List::insertNode(int v) {
 
 void List::deleteNode(int v) {
 	Node *temp, *del;
+	if (head != NULL && head->value == v) {
+		head = head->next;
+		return;
+	}
+	
 	temp = searchList(v);
-
 	// No data Value in Linked List
 	if (temp == 0) {
 		cout << "No delete Data" << endl;
@@ -95,7 +100,7 @@ void List::printList() {
 
 Node* List::searchList(int num) {
 	Node *p, *q;
-	p = head, q = head;
+	p = head,q = head;
 
 	while (p != 0 && p->value != num) {
 		q = p;
@@ -103,10 +108,11 @@ Node* List::searchList(int num) {
 	}
 
 	if (p != 0) {
+		cout << "Found" << endl;
 		return q;
 	}
 	else {
-		cout << "No data" << endl;
+		cout << "not Found" << endl;
 		return NULL;
 	}
 };
@@ -119,7 +125,31 @@ bool List::isEmpty() {
 
 int main() {
 	List l;
-	l.insertNode(5);
-	l.insertNode(3);
-	l.printList();
+	while (1) {
+		string input;
+		cin >> input;
+
+		if (input == "insert") {
+			int data;
+			cin >> data;
+			l.insertNode(data);
+		}
+		else if (input == "Delete") {
+			int data;
+			cin >> data;
+			l.deleteNode(data);
+		}
+		else if (input == "List") {
+			l.printList();
+		}
+		else if (input == "Search") {
+			int data;
+			cin >> data;
+			l.searchList(data);
+		}
+		else if (input == "Quit") {
+			l.~List();
+			break;
+		}
+	}
 }
