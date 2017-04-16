@@ -37,10 +37,15 @@ for i in range(degree):
                     same_str = bin_n[num][0:str] + '*' + bin_n[num][str+1:]
                     same_num = [result[num],result[next_num]]
 
+            if (bit_dif == 0):
+                same_str = bin_n[num]
+                same_num = [result[num] , result[next_num]]
+
             #비트 차이가 1일 경우에 리스트에 맨 끝에 추가한다.
             if(bit_dif <= 1):
                 bin_n.append(same_str)
                 result.append(same_num)
+
 
     #리스트 맨 끝에 추가한 줄여진 항에 대하여
     #이전에 중복된 항을 삭제한다.
@@ -53,9 +58,6 @@ for i in range(degree):
                 count += 1
                 break
     last_num = before_len
-
-print(bin_n)
-print(result)
 
 #최적화된 식을 출력한다.
 char = ['a','b','c','d']
