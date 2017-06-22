@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<title>대기오염</title>
+<style>
+	body{
+	    -webkit-text-size-adjust:none;
+	}
+	.Menu{
+		overflow:hidden;
+		position:relative;
+		margin-left : 10px;
+		margin-right : 10px;
+		text-align:center;
+		width:100%;
+		height:auto;
+	}
+
+	.Menu li{
+		font-size:10px;
+		color : #8c8b8b;
+		height:10px; padding:5px; margin-left:10px; float:left;
+		line-height:5px; display:inline-block;
+	}
+	
+
+	#dstImg{
+		display:inline-block;
+
+		margin-left:auto;
+		margin-right:0px;
+	}
+	#nameImg{
+		display:inline-block;
+		margin-top : 10px;
+		padding:5px;
+	}
+	#printImg {
+		margin-right:5px;
+		margin-left:5px;
+	}
+</style>
+ 
+<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script src="xml2json.js"></script>
+<script src="jquery.xdomainajax.js"></script>
+<script>
+/*서울 내 지역구 명칭*/
+var local = ['gangnam', 'gangdong', 'gangbuk', 'gangseo', 'gawnak', 'gwangjin', 'guro', 'geumcheon', 'nowon', 'dobong', 'dongdaemun', 'dongjak', 'mapo', 'seodaemun','seocho', 'seongdong','seongbuk', 'songpa', 'yangcheon','yeongdeungpo','yongsan','eunpyeong','jongno','jung','jungnang'];
+var local_hangul = ['강남구','강동구','강북구','강서구','관악구','광진구','구로구','금천구','노원구','도봉구','동대문구','동작구','마포구','서대문구','서초구','성동구','성북구','송파구','양천구','영등포구','용산구','은평구','종로구','중구','중랑구']
+var loc_data = new Array(local.length);
+var cache = [];
+var count = 0;
+
+function  getLocalFDDensity(count){
+	var local_len = local[count].length;
+	var local_num = local.length;
+	$('#nameImg').empty();
+	$('#nameImg').css('width', $(window).width()/2);
+
+	var dst = parseInt(loc_data[count]/50);
+	var dstNum = 0;
+	/* 미세먼지지수를 9단계로 나눠 결과 출력*/
+	switch(dst){
+		case 0: case 1: case 2: case 3:
+			dstNum = dst*50+50;
+			break;
+		case 4: case 5:
+			dstNum = 300;
+			break;
+		case 6: case 7: case 8: case 9:
+			dstNum = 500;
+			break;
+		case 10: case 11: case 12: case 13:
+			dstNum = 700;
+			break;
+		case 14: case 15: case 16: case 17:
+			dstNum = 900;
+			break;
+		case 18: case 19:
+			dstNum = 999;
+			break;
+	}
+/*
+	$('#dstImg').attr('src','img/aqi'+ dstNum + '.gif');
+	$('#dstImg').css('width', $(window).width()/2-10);
+*/
+
+	$('#nameImg').append('<br>');
+	var welcome = 'WELCOMETO';
+    for(var i = 0; i < welcome.length; i++){
+		var word = welcome[i];
+    	$('#nameImg').append('<img id="'+word+i+'" src="'+'aqi'+dstNum+'/'+word.toUpperCase()+'.png" />');	
+		$('#'+word+i).css('width', $(window).width()/8);
+    }
+	for(var i = 0; i < local_len; i++){
+		var word = local[count][i];
+		$('#nameImg').append('<img id="'+word+i+'" src="'+'aqi'+dstNum+'/'+word.toUpperCase()+'.png" />');
+		$('#'+word+i).css('width', $(window).width()/8);
+	}
+	$('#nameImg').append('</br>');
+}
+
+
+/*지역 메뉴 클릭 시 지역에 맞는 미세먼지지수 Image 출력*/
+$(document).on('click','.Menu li',function(e){
+		getLocalFDDensity(e.target.id);
+});
+
+$(function()
+{
+	var url = 'http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnMesureSidoLIst'; /*URL*/
+	var queryParams = '?' + encodeURIComponent('ServiceKey')+ '=' + '서비스키입력자리ㅎㅎ';
+
+	/*현 시간의 미세먼지 지수 데이터 파싱*/
+	queryParams += '&' + encodeURIComponent('sidoName') + '=' + encodeURIComponent('서울');
+	queryParams += '&' + encodeURIComponent('searchCondition') + '=' + encodeURIComponent('HOUR');
+	queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('25');
+	queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1');
+
+    $.ajax({
+        url: url + queryParams,
+        type: 'GET',
+        success: function(res) {
+            var myXML = res.responseText;
+            myXML = $.parseXML(myXML)
+            myXML = $(myXML);                        
+            myXML.find('item').each(function(idx){
+            	loc_data[idx] = $(this).find('pm25Value').text();
+            });      
+        },
+        error: function (){
+        	alert("error");
+        }
+    });
+
+
+    /*상단 지역 메뉴 제작*/
+
+	for(var i = 0; i <local.length; i++){
+		$('.Menu').append('<li id='+i+'>'+local_hangul[i]+'</li>');
+	}
+})
+
+
+</script>
+</head>
+ 
+<body>
+<h1>SEOUL</h1>
+ 		
+        <table>            
+            <tr>
+            	<div class="Menu"></div>
+         
+            </tr>
+        	<tr>
+        		<div id="printImg">
+               		<div id ="nameImg"></div>
+               		<img id="dstImg"/>
+            	</div>
+            </tr> 
+        </table>
+        <span class="result"></span>
+ 
+</body>
+</html>
